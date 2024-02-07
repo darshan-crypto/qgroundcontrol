@@ -27,7 +27,8 @@
 
 #include <QtQml>
 #include <QQmlEngine>
-
+#include"ensight/MyUdpServer.h"
+#include"ensight/MyUdpSocket.h"
 /// @file
 ///     @brief Core Plugin Interface for QGroundControl - Default Implementation
 ///     @author Gus Grubba <gus@auterion.com>
@@ -299,6 +300,8 @@ QQmlApplicationEngine* QGCCorePlugin::createQmlApplicationEngine(QObject* parent
 
 void QGCCorePlugin::createRootWindow(QQmlApplicationEngine* qmlEngine)
 {
+    qmlRegisterType<MyUdpServer>("Ensight",1,0,"MyUdpServer");
+    qmlRegisterType<MyUdpSocket>("Ensight",1,0,"MyUdpSocket");
     qmlEngine->load(QUrl(QStringLiteral("qrc:/qml/MainRootWindow.qml")));
 }
 

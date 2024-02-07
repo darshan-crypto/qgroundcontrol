@@ -23,6 +23,16 @@ ToolStripActionList {
             iconSource:     "/qmlimages/Plan.svg"
             onTriggered:    mainWindow.showPlanView()
         },
+        ToolStripAction {
+                           text:           qsTr("Udp")
+                           iconSource:     "/qmlimages/Plan.svg"
+                           onTriggered:    mainWindow.showUdpData()
+                        },
+        ToolStripAction {
+                           text:           qsTr("Action")
+                           iconSource:     "/qmlimages/Plan.svg"
+                           onTriggered:    mainWindow.showActionDialog()
+                        },
         PreFlightCheckListShowAction { onTriggered: displayPreFlightChecklist() },
         GuidedActionTakeoff { },
         GuidedActionLand { },

@@ -21,7 +21,7 @@ import QGroundControl.FlightDisplay
 import QGroundControl.FlightMap
 
 import QGroundControl.UTMSP
-
+import Ensight
 /// @brief Native QML top level window
 /// All properties defined here are visible to all QML pages.
 ApplicationWindow {
@@ -48,6 +48,244 @@ ApplicationWindow {
         // Start the sequence of first run prompt(s)
         firstRunPromptManager.nextPrompt()
     }
+
+    MyUdpServer{
+           id:myudpserver
+           onDataReceived:(str) => {
+                              mainroottext.append(str.toString())
+                          }
+       }
+       MyUdpSocket{
+           id:myudpsocket
+       }
+
+
+       Dialog
+       {
+           id:actionbuttundialog
+           width: 400
+           height: 400
+           anchors.centerIn: parent
+           onRejected:{
+               //when user clicks outside window
+               console.log("Cancel clicked")
+               myudpsocket.disconnectServer()
+
+           }
+           header:RowLayout{
+               layoutDirection: Qt.RightToLeft
+
+               Rectangle{
+                   Layout.preferredHeight: 30
+                   Layout.preferredWidth: 30
+                   color:"red"
+                   Image {
+
+                       id:closebtn
+
+
+                       source: "qrc:/qmlimages/custom/cancel.png"
+
+                       anchors.fill: parent
+                       MouseArea
+                       {
+                           anchors.fill: parent
+                           onClicked: {
+                               myudpsocket.disconnectServer();
+                                actionbuttundialog.close()
+                           }
+                       }
+                   }
+
+               }
+           }
+            ColumnLayout{
+           RowLayout{
+               layoutDirection: Qt.LeftToRight
+               Button{
+                   id:crowdDetection
+                   text: "Crowd Detection"
+                   onClicked: {
+                       if(crowdDetection.text === "Crowd Detection")
+                       {
+                           crowdDetection.text = "Stop Crowd Detection"
+                           myudpsocket.sendData("run script2")
+                       }
+                       else if(crowdDetection.text === "Stop Crowd Detection")
+                       {
+                           crowdDetection.text = "Crowd Detection"
+                           myudpsocket.sendData("stop script2")
+                       }
+
+                   }
+
+               }
+
+               Button{
+                   id:surroundSense
+                   text: "SurroundSense"
+                   onClicked: {
+                       if(surroundSense.text === "SurroundSense")
+                       {
+                           surroundSense.text = "Stop SurroundSense"
+                           myudpsocket.sendData("run script3")
+                       }
+                       else if(surroundSense.text === "Stop SurroundSense")
+                       {
+                           surroundSense.text = "SurroundSense"
+                           myudpsocket.sendData("stop script3")
+                       }
+
+                   }
+
+               }
+
+               Button{
+                   id:airSense
+                   text: "AirSense"
+                   onClicked: {
+
+                       if(airSense.text === "AirSense")
+                       {
+                           airSense.text = "Stop AirSense"
+
+                           myudpsocket.sendData("run script1")
+                       }
+                       else if(airSense.text === "Stop AirSense")
+                       {
+                           airSense.text = "AirSense"
+
+
+                           myudpsocket.sendData("stop script1")
+                       }
+                   }
+
+               }
+           }
+           RowLayout{
+               Button{
+                   id:gps
+                   text: "Gps"
+                   onClicked: {
+
+                       if(gps.text === "Gps")
+                       {
+                           gps.text = "Stop Gps"
+
+                           myudpsocket.sendData("run script4")
+                       }
+                       else if(gps.text === "Stop Gps")
+                       {
+                           gps.text = "Gps"
+
+
+                           myudpsocket.sendData("stop script4")
+                       }
+                   }
+
+               }
+
+
+               Button{
+                   id:nogps
+                   text: "NoGPS"
+                   onClicked: {
+
+                       if(nogps.text === "NoGPS")
+                       {
+                           nogps.text = "Stop NoGPS"
+
+                           myudpsocket.sendData("run script5")
+                       }
+                       else if(nogps.text === "Stop NoGPS")
+                       {
+                           nogps.text = "NoGPS"
+
+
+                           myudpsocket.sendData("stop script5")
+                       }
+                   }
+
+               }
+           }
+            }
+       }
+       function showActionDialog()
+       {
+           myudpsocket.connectToServer()
+          actionbuttundialog.open()
+       }
+       Dialog
+       {
+           id:udpdialog
+           width: 400
+           height: 400
+           anchors.centerIn: parent
+           onRejected:{
+               //when user clicks outside window
+               console.log("Cancel clicked")
+               myudpserver.stopServer();
+
+           }
+           header:RowLayout{
+               layoutDirection: Qt.RightToLeft
+
+               Rectangle{
+                   Layout.preferredHeight: 30
+                   Layout.preferredWidth: 30
+                   color:"red"
+                   Image {
+
+                       id:closebtn2
+
+
+                       source: "qrc:/qmlimages/custom/cancel.png"
+
+                       anchors.fill: parent
+                       MouseArea
+                       {
+                           anchors.fill: parent
+                           onClicked: {
+                               myudpserver.stopServer();
+                               udpdialog.close()
+                           }
+                       }
+                   }
+
+               }
+           }
+           ScrollView{
+               anchors.fill: parent
+
+
+               TextArea{
+                   id:mainroottext
+                   focus: true
+                   anchors.fill: parent
+                   background: Rectangle{
+
+                       border.color: "black"
+                       border.width: 1
+                   }
+                   readOnly: true
+                   // text:"sample udp data\nsample udp data2\nsample udp data3"
+
+               }
+           }
+
+       }
+
+
+       function showUdpData()
+       {
+           console.log("displaying udp data")
+
+
+           myudpserver.startServer();
+
+           udpdialog.open()
+
+       }
 
     QtObject {
         id: firstRunPromptManager

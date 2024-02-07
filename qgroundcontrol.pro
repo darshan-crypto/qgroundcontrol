@@ -419,6 +419,8 @@ HEADERS += \
     src/api/QGCSettings.h \
     src/api/QmlComponentInfo.h \
     src/GPS/Drivers/src/base_station.h \
+    src/ensight/MyUdpServer.h \
+    src/ensight/MyUdpSocket.h
 
 SOURCES += \
     src/QmlControls/CustomActionManager.cc \
@@ -427,6 +429,8 @@ SOURCES += \
     src/api/QGCOptions.cc \
     src/api/QGCSettings.cc \
     src/api/QmlComponentInfo.cc \
+    src/ensight/MyUdpServer.cpp \
+    src/ensight/MyUdpSocket.cpp
 
 #
 # Unit Test specific configuration goes here (requires full debug build with all plugins)
